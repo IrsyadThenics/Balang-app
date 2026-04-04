@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-// Pastikan folder 'screens' ada di dalam folder 'lib'
+
+// 2. PERBAIKI IMPORT (Pastikan folder 'splash' bukan 'spalsh')
+import 'screens/splash/splash_page.dart'; 
+import 'screens/auth/login_page.dart';
+import 'screens/auth/register_page.dart';
 import 'screens/home/home_page.dart';
 import 'screens/history/history_page.dart';
 import 'screens/profile/profile_page.dart';
@@ -21,11 +25,13 @@ class BalangApp extends StatelessWidget {
         fontFamily: 'Poppins',
         useMaterial3: true,
       ),
-      home: const MainScreen(),
+      // ALUR PERTAMA: Splash Screen
+      home: const SplashPage(), 
     );
   }
 }
 
+// --- MAINSCREEN (Tetap di sini agar navigasi bawah jalan) ---
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -34,7 +40,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 1; // Beranda sebagai halaman utama
+  int _currentIndex = 1; // Default ke Beranda
 
   final List<Widget> _pages = [
     const HistoryPage(),
@@ -50,6 +56,7 @@ class _MainScreenState extends State<MainScreen> {
         children: _pages,
       ),
       
+      // FloatingActionButton hanya muncul di Beranda (Tab index 1)
       floatingActionButton: _currentIndex == 1 
         ? FloatingActionButton(
             backgroundColor: const Color(0xFF0900FF),

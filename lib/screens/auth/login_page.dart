@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../home/home_page.dart';
+// UBAH IMPORT INI: Arahkan ke file main.dart (tempat MainScreen berada)
+// Jika MainScreen ada di main.dart, gunakan path relatif yang sesuai
+import '../../main.dart'; 
 import 'register_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -11,7 +13,7 @@ class LoginPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Dekorasi lingkaran biru kanan atas
+          // ... (Bagian dekorasi lingkaran tetap sama)
           Positioned(
             right: -50,
             top: -50,
@@ -25,7 +27,6 @@ class LoginPage extends StatelessWidget {
             ),
           ),
 
-          // Dekorasi lingkaran biru kiri bawah
           Positioned(
             left: -80,
             bottom: -80,
@@ -44,8 +45,8 @@ class LoginPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // ... (Bagian Text LOGIN dan Welcome tetap sama)
                   const Text(
                     'LOGIN',
                     style: TextStyle(
@@ -66,7 +67,6 @@ class LoginPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 50),
 
-                  // Email Field
                   _buildInputField(
                     label: 'Email',
                     hintText: 'nabilazhra@gmail.com',
@@ -74,7 +74,6 @@ class LoginPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  // Password Field
                   _buildInputField(
                     label: 'Password',
                     hintText: '123Zhra',
@@ -83,7 +82,7 @@ class LoginPage extends StatelessWidget {
 
                   const SizedBox(height: 40),
 
-                  // Login Button
+                  // PERBAIKAN TOMBOL LOGIN
                   SizedBox(
                     width: double.infinity,
                     height: 55,
@@ -91,15 +90,15 @@ class LoginPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF0900FF),
                         foregroundColor: Colors.white,
-                        elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       onPressed: () {
+                        // UBAH INI: Arahkan ke MainScreen, bukan HomePage
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (_) => const HomePage()),
+                          MaterialPageRoute(builder: (_) => const MainScreen()),
                         );
                       },
                       child: const Text(
@@ -107,7 +106,6 @@ class LoginPage extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          letterSpacing: 1,
                         ),
                       ),
                     ),
@@ -115,17 +113,11 @@ class LoginPage extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // Register Link
+                  // REGISTER LINK (Sudah Benar)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'New here? ',
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 14,
-                        ),
-                      ),
+                      const Text('New here? '),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -137,8 +129,6 @@ class LoginPage extends StatelessWidget {
                         child: const Text(
                           'Register now',
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -154,6 +144,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
+  // ... (Widget _buildInputField tetap sama)
   Widget _buildInputField({
     required String label,
     required String hintText,
@@ -162,13 +153,7 @@ class LoginPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.black54,
-          ),
-        ),
+        Text(label),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -179,15 +164,8 @@ class LoginPage extends StatelessWidget {
             obscureText: isPassword,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: const TextStyle(
-                color: Colors.black87,
-                fontSize: 15,
-              ),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 14,
-              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             ),
           ),
         ),

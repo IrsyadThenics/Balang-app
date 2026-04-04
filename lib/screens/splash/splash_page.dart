@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../auth/login_page.dart';
+import '../auth/login_page.dart'; // Pastikan path ini benar sesuai folder kamu
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -14,12 +14,15 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    // Delay 5 detik lalu pindah ke Login
+    // Timer tetap 5 detik sesuai kode awalmu
     Timer(const Duration(seconds: 5), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
+      // PENTING: Gunakan pushReplacement agar user tidak bisa kembali ke splash
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      }
     });
   }
 
@@ -28,7 +31,7 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background biru
+          // Background biru (Tetap sesuai desainmu)
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -39,7 +42,7 @@ class _SplashPageState extends State<SplashPage> {
             ),
           ),
 
-          // Shape putih atas kanan
+          // Shape putih atas kanan (Tetap abu-abu 200)
           Positioned(
             top: 0,
             right: 0,
@@ -53,7 +56,7 @@ class _SplashPageState extends State<SplashPage> {
             ),
           ),
 
-          // Shape putih bawah kiri
+          // Shape putih bawah kiri (Tetap abu-abu 200)
           Positioned(
             bottom: 0,
             left: 0,
@@ -72,10 +75,11 @@ class _SplashPageState extends State<SplashPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Ganti dengan logo kamu
+                // Logo (Tetap sesuai asset kamu)
                 Image.asset(
-                  'assets/logo.png', // <-- pastikan ada
+                  'assets/logo.png', 
                   width: 120,
+                  // Jika logo belum muncul, pastikan sudah daftar di pubspec.yaml
                 ),
                 const SizedBox(height: 20),
 
@@ -96,19 +100,17 @@ class _SplashPageState extends State<SplashPage> {
   }
 }
 
+// Clipper tetap sama seperti kode awalmu
 class TopClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-
     path.moveTo(size.width, 0);
     path.lineTo(0, 0);
     path.lineTo(size.width, size.height);
-
     path.close();
     return path;
   }
-
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
@@ -117,15 +119,12 @@ class BottomClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-
     path.moveTo(0, size.height);
     path.lineTo(0, 0);
     path.lineTo(size.width, size.height);
-
     path.close();
     return path;
   }
-
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
