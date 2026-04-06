@@ -4,8 +4,57 @@ import 'package:flutter/material.dart';
 import '../../main.dart'; 
 import 'register_page.dart';
 
-class LoginPage extends StatelessWidget {
+
+import 'package:firebase_auth/firebase_auth.dart';
+
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  void _login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (!email.endsWith('ac.id')) {
+      _showMessage('Email harus berakhiran ac.id');
+      return;
+    }
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage('Email dan password wajib diisi');
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const MainScreen()),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      _showMessage(e.message ?? 'Gagal login');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _showMessage(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,15 +118,17 @@ class LoginPage extends StatelessWidget {
 
                   _buildInputField(
                     label: 'Email',
-                    hintText: 'nabilazhra@gmail.com',
+                    hintText: 'Email Address',
                     isPassword: false,
+                    controller: _emailController,
                   ),
                   const SizedBox(height: 20),
 
                   _buildInputField(
                     label: 'Password',
-                    hintText: '123Zhra',
+                    hintText: 'Password',
                     isPassword: true,
+                    controller: _passwordController,
                   ),
 
                   const SizedBox(height: 40),
@@ -94,20 +145,16 @@ class LoginPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {
-                        // UBAH INI: Arahkan ke MainScreen, bukan HomePage
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) => const MainScreen()),
-                        );
-                      },
-                      child: const Text(
-                        'LOGIN',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      onPressed: _isLoading ? null : _login,
+                      child: _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                              'LOGIN',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                     ),
                   ),
 
@@ -144,11 +191,12 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  // ... (Widget _buildInputField tetap sama)
+  // Widget Input Field (identik dengan register)
   Widget _buildInputField({
     required String label,
     required String hintText,
     required bool isPassword,
+    TextEditingController? controller,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,6 +209,7 @@ class LoginPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: TextField(
+            controller: controller,
             obscureText: isPassword,
             decoration: InputDecoration(
               hintText: hintText,

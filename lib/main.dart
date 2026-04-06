@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 // --- IMPORT SEMUA SCREEN ---
 // Pastikan path ini sesuai dengan folder di proyek Balang kamu
@@ -11,7 +13,12 @@ import 'screens/profile/profile_page.dart';
 // Pastikan kamu sudah membuat file notification_page.dart
 import 'screens/home/notification_page.dart'; 
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const BalangApp());
 }
 

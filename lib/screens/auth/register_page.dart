@@ -1,8 +1,64 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart'; // Import ke halaman login
 
-class RegisterPage extends StatelessWidget {
+
+import 'package:firebase_auth/firebase_auth.dart';
+
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmController = TextEditingController();
+  bool _isLoading = false;
+
+  void _register() async {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final confirm = _confirmController.text;
+
+    if (!email.endsWith('ac.id')) {
+      _showMessage('Email harus berakhiran ac.id');
+      return;
+    }
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirm.isEmpty) {
+      _showMessage('Semua field wajib diisi');
+      return;
+    }
+    if (password != confirm) {
+      _showMessage('Password tidak sama');
+      return;
+    }
+    setState(() => _isLoading = true);
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // Sukses, kembali ke login
+      if (mounted) {
+        Navigator.pop(context);
+        _showMessage('Registrasi berhasil, silakan login');
+      }
+    } on FirebaseAuthException catch (e) {
+      _showMessage(e.message ?? 'Gagal register');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _showMessage(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,119 +95,127 @@ class RegisterPage extends StatelessWidget {
 
           // 2. Konten Register
           SafeArea(
-            child: SingleChildScrollView( // Menggunakan Scroll agar tidak error saat keyboard muncul
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 80), // Menyesuaikan posisi agar sejajar desain login
-                    const Text(
-                      'REGISTER',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF0900FF),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      "Join us and start finding\nlost items",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-
-                    // --- INPUT FIELDS (Ukuran & Style Sama dengan Login) ---
-                    _buildInputField(
-                      label: 'Full Name',
-                      hintText: 'Nabil Azhra',
-                      isPassword: false,
-                    ),
-                    const SizedBox(height: 20),
-
-                    _buildInputField(
-                      label: 'Email',
-                      hintText: 'nabilazhra@gmail.com',
-                      isPassword: false,
-                    ),
-                    const SizedBox(height: 20),
-
-                    _buildInputField(
-                      label: 'Password',
-                      hintText: '123Zhra',
-                      isPassword: true,
-                    ),
-                    const SizedBox(height: 20),
-
-                    _buildInputField(
-                      label: 'Confirm Password',
-                      hintText: '123Zhra',
-                      isPassword: true,
-                    ),
-
-                    const SizedBox(height: 40),
-
-                    // --- TOMBOL REGISTER ---
-                    SizedBox(
-                      width: double.infinity,
-                      height: 55, // Tinggi sama dengan Login
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0900FF),
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: () {
-                          // ALUR: Setelah register, balik ke Login
-                          Navigator.pop(context); 
-                        },
-                        child: const Text(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 480),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 80),
+                        const Text(
                           'REGISTER',
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0900FF),
                           ),
                         ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // --- LINK KEMBALI KE LOGIN ---
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                        const SizedBox(height: 12),
                         const Text(
-                          'Already have an account? ',
-                          style: TextStyle(color: Colors.black54, fontSize: 14),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context); // Kembali ke Login
-                          },
-                          child: const Text(
-                            'Login here',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          "Join us and start finding\nlost items",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
                           ),
                         ),
+                        const SizedBox(height: 40),
+
+                        // --- INPUT FIELDS (Ukuran & Style Sama dengan Login) ---
+                        _buildInputField(
+                          label: 'Full Name',
+                          hintText: 'Nama Lengkap',
+                          isPassword: false,
+                          controller: _nameController,
+                        ),
+                        const SizedBox(height: 20),
+
+                        _buildInputField(
+                          label: 'Email',
+                          hintText: 'Email Address',
+                          isPassword: false,
+                          controller: _emailController,
+                        ),
+                        const SizedBox(height: 20),
+
+                        _buildInputField(
+                          label: 'Password',
+                          hintText: 'Password',
+                          isPassword: true,
+                          controller: _passwordController,
+                        ),
+                        const SizedBox(height: 20),
+
+                        _buildInputField(
+                          label: 'Confirm Password',
+                          hintText: 'Confirm Password',
+                          isPassword: true,
+                          controller: _confirmController,
+                        ),
+
+                        const SizedBox(height: 40),
+
+                        // --- TOMBOL REGISTER ---
+                        SizedBox(
+                          width: double.infinity,
+                          height: 55,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0900FF),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            onPressed: _isLoading ? null : _register,
+                            child: _isLoading
+                                ? const CircularProgressIndicator(color: Colors.white)
+                                : const Text(
+                                    'REGISTER',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 1,
+                                    ),
+                                  ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // --- LINK KEMBALI KE LOGIN ---
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Already have an account? ',
+                              style: TextStyle(color: Colors.black54, fontSize: 14),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                'Login here',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
                       ],
                     ),
-                    const SizedBox(height: 40),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -166,6 +230,7 @@ class RegisterPage extends StatelessWidget {
     required String label,
     required String hintText,
     required bool isPassword,
+    TextEditingController? controller,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,6 +249,7 @@ class RegisterPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: TextField(
+            controller: controller,
             obscureText: isPassword,
             decoration: InputDecoration(
               hintText: hintText,

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "321137441087",
+    "project_id": "balang-3",
+    "storage_bucket": "balang-3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321137441087:android:9e6e1c40eefda928043b8a",
+        "android_client_info": {
+          "package_name": "com.example.flutter_balang_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAg9x0aYeXNXG6QmhP9L9T0O6JOCRMeZk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321137441087:android:72f6d606bb55ff04043b8a",
+        "android_client_info": {
+          "package_name": "com.example.my_new_firebase_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAg9x0aYeXNXG6QmhP9L9T0O6JOCRMeZk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
